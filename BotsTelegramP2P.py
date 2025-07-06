@@ -3,6 +3,11 @@ import time
 import os
 from datetime import datetime
 
+# --- Diagnóstico: imprimir todas las variables de entorno disponibles ---
+print("🌐 Variables de entorno detectadas:")
+for k, v in os.environ.items():
+    print(f"{k} = {v}")
+
 # --- Configuración Binance ---
 metodo_pago_venta = "BancoPichincha"
 metodo_pago_compra = "SkrillMoneybookers"
