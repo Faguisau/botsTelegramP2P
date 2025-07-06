@@ -17,7 +17,7 @@ metodo_pago_compra = "SkrillMoneybookers"
 
 moneda = "USD"
 cripto = "USDT"
-intervalo_espera = 300  # 5 minutos
+intervalo_espera = 120  # 2 minutos
 
 # --- Configuración Telegram ---
 bot_token = "7725174874:AAHdi1WSIDhgTY7zyCuspbWwqtwdyaW0HYQ"
@@ -97,13 +97,13 @@ def main():
 
             loggear(f"Venta {metodo_pago_venta}: {precio:.3f} USD ({tendencia}) por {comerciante} ({volumen} USDT)")
 
-            if precio <= umbral_3:
+            if precio != ultimo_precio_venta and precio <= umbral_3:
                 mensaje = f"🔴 🔻 Venta Nivel 3 - {metodo_pago_venta}: {precio:.3f} USD\n{tendencia}\n👤 {comerciante}\n📦 {volumen} USDT\n🕒 {hora}"
                 enviar_telegram(mensaje)
-            elif precio <= umbral_2:
+            elif precio != ultimo_precio_venta and precio <= umbral_2:
                 mensaje = f"🟠 🔻 Venta Nivel 2 - {metodo_pago_venta}: {precio:.3f} USD\n{tendencia}\n👤 {comerciante}\n📦 {volumen} USDT\n🕒 {hora}"
                 enviar_telegram(mensaje)
-            elif precio <= umbral_1:
+            elif precio != ultimo_precio_venta and precio <= umbral_1:
                 mensaje = f"🟡 🔻 Venta Nivel 1 - {metodo_pago_venta}: {precio:.3f} USD\n{tendencia}\n👤 {comerciante}\n📦 {volumen} USDT\n🕒 {hora}"
                 enviar_telegram(mensaje)
 
@@ -128,19 +128,48 @@ def main():
 
             loggear(f"Compra {metodo_pago_compra}: {precio:.3f} USD ({tendencia}) por {comerciante} ({volumen} USDT)")
 
-            if precio >= umbral_skrill_3:
+            if precio != ultimo_precio_compra and precio >= umbral_skrill_3:
                 mensaje = f"🔴 🟢 Compra Nivel 3 - {metodo_pago_compra}: {precio:.3f} USD\n{tendencia}\n👤 {comerciante}\n📦 {volumen} USDT\n🕒 {hora}"
                 enviar_telegram(mensaje)
-            elif precio >= umbral_skrill_2:
+            elif precio != ultimo_precio_compra and precio >= umbral_skrill_2:
                 mensaje = f"🟠 🟢 Compra Nivel 2 - {metodo_pago_compra}: {precio:.3f} USD\n{tendencia}\n👤 {comerciante}\n📦 {volumen} USDT\n🕒 {hora}"
                 enviar_telegram(mensaje)
-            elif precio >= umbral_skrill_1:
+            elif precio != ultimo_precio_compra and precio >= umbral_skrill_1:
                 mensaje = f"🟡 🟢 Compra Nivel 1 - {metodo_pago_compra}: {precio:.3f} USD\n{tendencia}\n👤 {comerciante}\n📦 {volumen} USDT\n🕒 {hora}"
                 enviar_telegram(mensaje)
 
             ultimo_precio_compra = precio
         elif motivo_compra:
             enviar_telegram(f"{motivo_compra}\n🕒 {hora}")
+
+        # --- Venta DIRECTA con Banco Pichincha (ver precios de compra) ---
+        resultado_directa, motivo_directa = obtener_info_top(metodo_pago_venta, "BUY")
+        if resultado_directa:
+            precio, comerciante, volumen = resultado_directa
+
+            if ultimo_precio_venta is not None:
+                if precio > ultimo_precio_venta:
+                    tendencia = "🔼 Subió"
+                elif precio < ultimo_precio_venta:
+                    tendencia = "🔽 Bajó"
+                else:
+                    tendencia = "⏸️ Sin cambio"
+            else:
+                tendencia = "📌 Primer dato"
+
+            loggear(f"Venta DIRECTA {metodo_pago_venta}: {precio:.3f} USD ({tendencia}) por {comerciante} ({volumen} USDT)")
+
+            if precio != ultimo_precio_venta and precio <= umbral_3:
+                mensaje = f"🔴 ⚡ Venta DIRECTA Nivel 3 - {metodo_pago_venta}: {precio:.3f} USD\n{tendencia}\n👤 {comerciante}\n📦 {volumen} USDT\n🕒 {hora}"
+                enviar_telegram(mensaje)
+            elif precio != ultimo_precio_venta and precio <= umbral_2:
+                mensaje = f"🟠 ⚡ Venta DIRECTA Nivel 2 - {metodo_pago_venta}: {precio:.3f} USD\n{tendencia}\n👤 {comerciante}\n📦 {volumen} USDT\n🕒 {hora}"
+                enviar_telegram(mensaje)
+            elif precio != ultimo_precio_venta and precio <= umbral_1:
+                mensaje = f"🟡 ⚡ Venta DIRECTA Nivel 1 - {metodo_pago_venta}: {precio:.3f} USD\n{tendencia}\n👤 {comerciante}\n📦 {volumen} USDT\n🕒 {hora}"
+                enviar_telegram(mensaje)
+        elif motivo_directa:
+            enviar_telegram(f"📡 Venta DIRECTA - {motivo_directa}\n🕒 {hora}")
 
         time.sleep(intervalo_espera)
 
