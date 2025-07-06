@@ -1,22 +1,24 @@
 import requests
 import time
+import os
 from datetime import datetime
 
 # --- Configuración Binance ---
 metodo_pago_venta = "BancoPichincha"
 metodo_pago_compra = "SkrillMoneybookers"
 
-umbral_venta = 0.982
-umbral_venta_directa = 0.985
-umbral_compra_skrill = 1.040
+# --- Leer umbrales desde variables de entorno (con valores por defecto si no están definidas) ---
+umbral_venta = float(os.getenv("UMBRAL_VENTA", 0.982))
+umbral_venta_directa = float(os.getenv("UMBRAL_VENTA_DIRECTA", 0.985))
+umbral_compra_skrill = float(os.getenv("UMBRAL_COMPRA_SKRILL", 1.040))
 
 moneda = "USD"
 cripto = "USDT"
 intervalo_espera = 120  # 2 minutos
 
 # --- Configuración Telegram ---
-bot_token = "7725174874:AAHdi1WSIDhgTY7zyCuspbWwqtwdyaW0HYQ"
-chat_id = "677169018"
+bot_token = os.getenv("BOT_TOKEN") or "7725174874:AAHdi1WSIDhgTY7zyCuspbWwqtwdyaW0HYQ"
+chat_id = os.getenv("CHAT_ID") or "677169018"
 
 # --- Configuración de Logs ---
 log_file = "registro_alertas.txt"
@@ -75,7 +77,7 @@ def main():
     while True:
         hora = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-        # --- Alerta: Venta con Banco Pichincha ---
+        # --- Venta Banco Pichincha (SELL) ---
         resultado_venta, motivo_venta = obtener_info_top(metodo_pago_venta, "SELL")
         if resultado_venta:
             precio, comerciante, volumen = resultado_venta
@@ -83,7 +85,6 @@ def main():
                 "🔼 Subió" if precio > ultimo_precio_venta else
                 "🔽 Bajó" if precio < ultimo_precio_venta else "⏸️ Sin cambio"
             )
-
             loggear(f"Venta {metodo_pago_venta}: {precio:.3f} USD ({tendencia}) por {comerciante} ({volumen} USDT)")
 
             if precio != ultimo_precio_venta and precio <= umbral_venta:
@@ -94,7 +95,7 @@ def main():
         elif motivo_venta:
             enviar_telegram(f"{motivo_venta}\n🕒 {hora}")
 
-        # --- Alerta: Venta DIRECTA con Banco Pichincha ---
+        # --- Venta DIRECTA Banco Pichincha (BUY) ---
         resultado_directa, motivo_directa = obtener_info_top(metodo_pago_venta, "BUY")
         if resultado_directa:
             precio, comerciante, volumen = resultado_directa
@@ -102,17 +103,15 @@ def main():
                 "🔼 Subió" if precio > ultimo_precio_venta else
                 "🔽 Bajó" if precio < ultimo_precio_venta else "⏸️ Sin cambio"
             )
-
             loggear(f"Venta DIRECTA {metodo_pago_venta}: {precio:.3f} USD ({tendencia}) por {comerciante} ({volumen} USDT)")
 
             if precio != ultimo_precio_venta and precio <= umbral_venta_directa:
                 mensaje = f"⚡ Alerta Venta DIRECTA - {metodo_pago_venta}: {precio:.3f} USD\n{tendencia}\n👤 {comerciante}\n📦 {volumen} USDT\n🕒 {hora}"
                 enviar_telegram(mensaje)
-
         elif motivo_directa:
             enviar_telegram(f"📡 Venta DIRECTA - {motivo_directa}\n🕒 {hora}")
 
-        # --- Alerta: Compra con Skrill ---
+        # --- Compra Skrill (BUY) ---
         resultado_compra, motivo_compra = obtener_info_top(metodo_pago_compra, "BUY")
         if resultado_compra:
             precio, comerciante, volumen = resultado_compra
@@ -120,11 +119,10 @@ def main():
                 "🔼 Subió" if precio > ultimo_precio_compra else
                 "🔽 Bajó" if precio < ultimo_precio_compra else "⏸️ Sin cambio"
             )
-
             loggear(f"Compra {metodo_pago_compra}: {precio:.3f} USD ({tendencia}) por {comerciante} ({volumen} USDT)")
 
             if precio != ultimo_precio_compra and precio >= umbral_compra_skrill:
-                mensaje = f"🟢 Alerta Compra PUBLICANDO - {metodo_pago_compra}: {precio:.3f} USD\n{tendencia}\n👤 {comerciante}\n📦 {volumen} USDT\n🕒 {hora}"
+                mensaje = f"🟢 Alerta Compra - {metodo_pago_compra}: {precio:.3f} USD\n{tendencia}\n👤 {comerciante}\n📦 {volumen} USDT\n🕒 {hora}"
                 enviar_telegram(mensaje)
 
             ultimo_precio_compra = precio
