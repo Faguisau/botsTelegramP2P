@@ -4,15 +4,15 @@ from datetime import datetime
 
 # --- Configuración Binance ---
 # Banco Pichincha (venta)
-umbral_1 = 0.991
-umbral_2 = 0.986
-umbral_3 = 0.982
+umbral_1 = 0.981
+umbral_2 = 0.981
+umbral_3 = 0.981
 metodo_pago_venta = "BancoPichincha"
 
 # Skrill (compra)
-umbral_skrill_1 = 1.020
-umbral_skrill_2 = 1.035
-umbral_skrill_3 = 1.045
+umbral_skrill_1 = 1.045
+umbral_skrill_2 = 1.048
+umbral_skrill_3 = 1.050
 metodo_pago_compra = "SkrillMoneybookers"
 
 moneda = "USD"
