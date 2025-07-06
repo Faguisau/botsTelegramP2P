@@ -10,3 +10,22 @@
 2025-07-05 23:27:21 - Compra SkrillMoneybookers: 1.035 USD (📌 Primer dato) por _INTERCAMBIOVNI_ (24.61 USDT)
 2025-07-05 23:29:23 - Venta BancoPichincha: 0.982 USD (⏸️ Sin cambio) por Henrieta-1905 (500.00 USDT)
 2025-07-05 23:29:24 - Compra SkrillMoneybookers: 1.035 USD (⏸️ Sin cambio) por _INTERCAMBIOVNI_ (24.61 USDT)
+2025-07-06 09:00:42 - Venta BancoPichincha: 0.983 USD (📌 Primer dato) por P2P_ECUADOR (26.00 USDT)
+2025-07-06 09:00:43 - Mensaje enviado: 🟠 🔻 Venta Nivel 2 - BancoPichincha: 0.983 USD | 📌 Primer dato | 👤 P2P_ECUADOR | 📦 26.00 USDT | 🕒 2025-07-06 09:00:41
+2025-07-06 09:00:44 - Compra SkrillMoneybookers: 1.039 USD (📌 Primer dato) por Accepted_thirdparty (1134.28 USDT)
+2025-07-06 09:00:45 - Mensaje enviado: 🟠 🟢 Compra Nivel 2 - SkrillMoneybookers: 1.039 USD | 📌 Primer dato | 👤 Accepted_thirdparty | 📦 1134.28 USDT | 🕒 2025-07-06 09:00:41
+2025-07-06 09:00:46 - Venta DIRECTA BancoPichincha: 0.999 USD (🔼 Subió) por COMPRA_VENTA_SEGURO (94.43 USDT)
+2025-07-06 09:01:25 - Venta BancoPichincha: 0.983 USD (📌 Primer dato) por P2P_ECUADOR (26.00 USDT)
+2025-07-06 09:01:26 - Mensaje enviado: 🟠 🔻 Venta Nivel 2 - BancoPichincha: 0.983 USD | 📌 Primer dato | 👤 P2P_ECUADOR | 📦 26.00 USDT | 🕒 2025-07-06 09:01:24
+2025-07-06 09:01:27 - Compra SkrillMoneybookers: 1.039 USD (📌 Primer dato) por Accepted_thirdparty (1134.28 USDT)
+2025-07-06 09:01:28 - Mensaje enviado: 🟠 🟢 Compra Nivel 2 - SkrillMoneybookers: 1.039 USD | 📌 Primer dato | 👤 Accepted_thirdparty | 📦 1134.28 USDT | 🕒 2025-07-06 09:01:24
+2025-07-06 09:01:29 - Venta DIRECTA BancoPichincha: 0.999 USD (🔼 Subió) por COMPRA_VENTA_SEGURO (94.43 USDT)
+2025-07-06 09:01:30 - Mensaje enviado: 🟡 ⚡ Venta DIRECTA Nivel 1 - BancoPichincha: 0.999 USD | 🔼 Subió | 👤 COMPRA_VENTA_SEGURO | 📦 94.43 USDT | 🕒 2025-07-06 09:01:24
+2025-07-06 09:03:31 - Venta BancoPichincha: 0.983 USD (⏸️ Sin cambio) por P2P_ECUADOR (26.00 USDT)
+2025-07-06 09:03:32 - Compra SkrillMoneybookers: 1.039 USD (⏸️ Sin cambio) por Accepted_thirdparty (1134.28 USDT)
+2025-07-06 09:03:32 - Venta DIRECTA BancoPichincha: 0.999 USD (🔼 Subió) por COMPRA_VENTA_SEGURO (64.41 USDT)
+2025-07-06 09:03:33 - Mensaje enviado: 🟡 ⚡ Venta DIRECTA Nivel 1 - BancoPichincha: 0.999 USD | 🔼 Subió | 👤 COMPRA_VENTA_SEGURO | 📦 64.41 USDT | 🕒 2025-07-06 09:03:30
+2025-07-06 09:05:34 - Venta BancoPichincha: 0.983 USD (⏸️ Sin cambio) por P2P_ECUADOR (26.00 USDT)
+2025-07-06 09:05:35 - Compra SkrillMoneybookers: 1.039 USD (⏸️ Sin cambio) por Accepted_thirdparty (1134.28 USDT)
+2025-07-06 09:05:35 - Venta DIRECTA BancoPichincha: 0.999 USD (🔼 Subió) por COMPRA_VENTA_SEGURO (64.41 USDT)
+2025-07-06 09:05:36 - Mensaje enviado: 🟡 ⚡ Venta DIRECTA Nivel 1 - BancoPichincha: 0.999 USD | 🔼 Subió | 👤 COMPRA_VENTA_SEGURO | 📦 64.41 USDT | 🕒 2025-07-06 09:05:33
