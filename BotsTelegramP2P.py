@@ -12,10 +12,10 @@ for k, v in os.environ.items():
 metodo_pago_venta = "BancoPichincha"
 metodo_pago_compra = "SkrillMoneybookers"
 
-# --- Leer umbrales desde variables de entorno (con valores por defecto si no están definidas) ---
-umbral_venta = float(os.getenv("UMBRAL_VENTA", 0.982))
-umbral_venta_directa = float(os.getenv("UMBRAL_VENTA_DIRECTA", 0.985))
-umbral_compra_skrill = float(os.getenv("UMBRAL_COMPRA_SKRILL", 1.040))
+# --- Leer umbrales estrictamente desde entorno (sin valores por defecto) ---
+umbral_venta = float(os.environ["UMBRAL_VENTA"])
+umbral_venta_directa = float(os.environ["UMBRAL_VENTA_DIRECTA"])
+umbral_compra_skrill = float(os.environ["UMBRAL_COMPRA_SKRILL"])
 
 print("🔧 Umbrales desde entorno:")
 print("UMBRAL_VENTA =", umbral_venta)
@@ -27,8 +27,8 @@ cripto = "USDT"
 intervalo_espera = 120  # 2 minutos
 
 # --- Configuración Telegram ---
-bot_token = os.getenv("BOT_TOKEN") or "7725174874:AAHdi1WSIDhgTY7zyCuspbWwqtwdyaW0HYQ"
-chat_id = os.getenv("CHAT_ID") or "677169018"
+bot_token = os.environ["BOT_TOKEN"]
+chat_id = os.environ["CHAT_ID"]
 
 # --- Configuración de Logs ---
 log_file = "registro_alertas.txt"
