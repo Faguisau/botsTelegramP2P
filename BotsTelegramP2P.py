@@ -17,7 +17,7 @@ metodo_pago_compra = "SkrillMoneybookers"
 
 moneda = "USD"
 cripto = "USDT"
-intervalo_espera = 300  # 5 minutos
+intervalo_espera = 120  # 5 minutos
 
 # --- Configuración Telegram ---
 bot_token = "7725174874:AAHdi1WSIDhgTY7zyCuspbWwqtwdyaW0HYQ"
