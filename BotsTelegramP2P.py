@@ -1,72 +1,135 @@
-import os
 import requests
 import time
+import os
+from datetime import datetime
 
-def enviar_mensaje(token, chat_id, mensaje):
-    url = f"https://api.telegram.org/bot{token}/sendMessage"
-    data = {"chat_id": chat_id, "text": mensaje}
-    requests.post(url, data=data)
+# --- Configuración Binance ---
+metodo_pago_venta = "BancoPichincha"
+metodo_pago_compra = "SkrillMoneybookers"
 
-def obtener_precio(moneda, metodo_pago, transaccion):
+# --- Leer umbrales desde variables de entorno (con valores por defecto si no están definidas) ---
+umbral_venta = float(os.getenv("UMBRAL_VENTA", 0.985))
+umbral_venta_directa = float(os.getenv("UMBRAL_VENTA_DIRECTA", 0.985))
+umbral_compra_skrill = float(os.getenv("UMBRAL_COMPRA_SKRILL", 1.000))
+
+moneda = "USD"
+cripto = "USDT"
+intervalo_espera = 120  # 2 minutos
+
+# --- Configuración Telegram ---
+bot_token = os.getenv("BOT_TOKEN") or "7725174874:AAHdi1WSIDhgTY7zyCuspbWwqtwdyaW0HYQ"
+chat_id = os.getenv("CHAT_ID") or "677169018"
+
+# --- Configuración de Logs ---
+log_file = "registro_alertas.txt"
+
+def loggear(texto):
+    with open(log_file, "a", encoding="utf-8") as f:
+        f.write(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} - {texto}\n")
+
+def enviar_telegram(mensaje):
+    url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
+    params = {"chat_id": chat_id, "text": mensaje}
+    response = requests.get(url, params=params)
+    if response.status_code == 200:
+        print("✅ Mensaje enviado por Telegram.")
+        loggear("Mensaje enviado: " + mensaje.replace("\n", " | "))
+    else:
+        print("⚠️ Error al enviar el mensaje:", response.text)
+        loggear("Error al enviar mensaje: " + response.text)
+
+def obtener_info_top(metodo_pago, tipo_transaccion):
     url = "https://p2p.binance.com/bapi/c2c/v2/friendly/c2c/adv/search"
+    headers = {"Content-Type": "application/json", "User-Agent": "Mozilla/5.0"}
     data = {
-        "asset": "USDT",
+        "asset": cripto,
         "fiat": moneda,
         "merchantCheck": False,
         "page": 1,
+        "rows": 10,
         "payTypes": [metodo_pago],
-        "publisherType": None,
-        "rows": 1,
-        "tradeType": transaccion,
-        "proMerchantAds": False,
-        "shieldMerchantAds": False
+        "tradeType": tipo_transaccion
     }
-    headers = {"Content-Type": "application/json"}
-    response = requests.post(url, json=data, headers=headers)
-    if response.status_code == 200:
-        r_json = response.json()
-        return float(r_json["data"][0]["adv"]["price"])
-    else:
-        print("Error al consultar API de Binance")
-        return None
+
+    try:
+        response = requests.post(url, headers=headers, json=data)
+        anuncios = response.json()["data"]
+        if not anuncios:
+            mensaje = f"⚠️ No hay anuncios disponibles para {tipo_transaccion} con {metodo_pago}"
+            loggear(mensaje)
+            return None, mensaje
+
+        anuncio_top = anuncios[0]
+        precio = float(anuncio_top["adv"]["price"])
+        comerciante = anuncio_top["advertiser"]["nickName"]
+        volumen = anuncio_top["adv"]["tradableQuantity"]
+        return (precio, comerciante, volumen), None
+
+    except Exception as e:
+        error_msg = f"❌ Error obteniendo datos para {tipo_transaccion} con {metodo_pago}: {e}"
+        loggear(error_msg)
+        return None, error_msg
 
 def main():
-    # Leer variables de entorno
-    print("🔍 DEBUG ENV VARS:")
-    for var in ["TOKEN", "CHAT_ID", "UMBRAL_COMPRA_SKRILL", "UMBRAL_VENTA", "UMBRAL_VENTA_DIRECTA"]:
-        print(f"{var} => {os.environ.get(var, 'NO DEFINIDA')}")
-
-    token = os.environ["TOKEN"]
-    chat_id = os.environ["CHAT_ID"]
-
-    umbral_compra_skrill = float(os.environ["UMBRAL_COMPRA_SKRILL"])
-    umbral_venta = float(os.environ["UMBRAL_VENTA"])
-    umbral_venta_directa = float(os.environ["UMBRAL_VENTA_DIRECTA"])
+    ultimo_precio_venta = None
+    ultimo_precio_compra = None
 
     while True:
-        try:
-            # Alerta 1: Skrill a compra
-            precio_skrill = obtener_precio("USD", "Skrill", "BUY")
-            if precio_skrill and precio_skrill >= umbral_compra_skrill:
-                mensaje = f"🔔 *Alerta Skrill a COMPRA*\nPrecio: {precio_skrill} USDT\nUmbral: {umbral_compra_skrill} USDT"
-                enviar_mensaje(token, chat_id, mensaje)
+        hora = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-            # Alerta 2: BancoPichincha a venta
-            precio_pichincha_venta = obtener_precio("USD", "BancoPichincha", "SELL")
-            if precio_pichincha_venta and precio_pichincha_venta <= umbral_venta:
-                mensaje = f"💰 *Alerta BancoPichincha VENTA*\nPrecio: {precio_pichincha_venta} USDT\nUmbral: {umbral_venta} USDT"
-                enviar_mensaje(token, chat_id, mensaje)
+        # --- Venta Banco Pichincha (SELL) ---
+        resultado_venta, motivo_venta = obtener_info_top(metodo_pago_venta, "SELL")
+        if resultado_venta:
+            precio, comerciante, volumen = resultado_venta
+            tendencia = "📌 Primer dato" if ultimo_precio_venta is None else (
+                "🔼 Subió" if precio > ultimo_precio_venta else
+                "🔽 Bajó" if precio < ultimo_precio_venta else "⏸️ Sin cambio"
+            )
+            loggear(f"Venta {metodo_pago_venta}: {precio:.3f} USD ({tendencia}) por {comerciante} ({volumen} USDT)")
 
-            # Alerta 3: Venta directa (alguien comprando con Pichincha)
-            precio_pichincha_compra = obtener_precio("USD", "BancoPichincha", "BUY")
-            if precio_pichincha_compra and precio_pichincha_compra >= umbral_venta_directa:
-                mensaje = f"📢 *Alerta VENTA DIRECTA*\nPrecio de compra: {precio_pichincha_compra} USDT\nUmbral: {umbral_venta_directa} USDT"
-                enviar_mensaje(token, chat_id, mensaje)
+            if precio != ultimo_precio_venta and precio <= umbral_venta:
+                mensaje = f"🔻 Alerta Venta PUBLICANDO - {metodo_pago_venta}: {precio:.3f} USD\n{tendencia}\n👤 {comerciante}\n📦 {volumen} USDT\n🕒 {hora}"
+                enviar_telegram(mensaje)
 
-        except Exception as e:
-            print("Error durante la ejecución:", e)
+            ultimo_precio_venta = precio
+        elif motivo_venta:
+            enviar_telegram(f"{motivo_venta}\n🕒 {hora}")
 
-        time.sleep(60)
+        # --- Venta DIRECTA Banco Pichincha (BUY) ---
+        resultado_directa, motivo_directa = obtener_info_top(metodo_pago_venta, "BUY")
+        if resultado_directa:
+            precio, comerciante, volumen = resultado_directa
+            tendencia = "📌 Primer dato" if ultimo_precio_venta is None else (
+                "🔼 Subió" if precio > ultimo_precio_venta else
+                "🔽 Bajó" if precio < ultimo_precio_venta else "⏸️ Sin cambio"
+            )
+            loggear(f"Venta DIRECTA {metodo_pago_venta}: {precio:.3f} USD ({tendencia}) por {comerciante} ({volumen} USDT)")
+
+            if precio != ultimo_precio_venta and precio <= umbral_venta_directa:
+                mensaje = f"⚡ Alerta Venta DIRECTA - {metodo_pago_venta}: {precio:.3f} USD\n{tendencia}\n👤 {comerciante}\n📦 {volumen} USDT\n🕒 {hora}"
+                enviar_telegram(mensaje)
+        elif motivo_directa:
+            enviar_telegram(f"📡 Venta DIRECTA - {motivo_directa}\n🕒 {hora}")
+
+        # --- Compra Skrill (BUY) ---
+        resultado_compra, motivo_compra = obtener_info_top(metodo_pago_compra, "BUY")
+        if resultado_compra:
+            precio, comerciante, volumen = resultado_compra
+            tendencia = "📌 Primer dato" if ultimo_precio_compra is None else (
+                "🔼 Subió" if precio > ultimo_precio_compra else
+                "🔽 Bajó" if precio < ultimo_precio_compra else "⏸️ Sin cambio"
+            )
+            loggear(f"Compra {metodo_pago_compra}: {precio:.3f} USD ({tendencia}) por {comerciante} ({volumen} USDT)")
+
+            if precio != ultimo_precio_compra and precio >= umbral_compra_skrill:
+                mensaje = f"🟢 Alerta Compra PUBLICANDO - {metodo_pago_compra}: {precio:.3f} USD\n{tendencia}\n👤 {comerciante}\n📦 {volumen} USDT\n🕒 {hora}"
+                enviar_telegram(mensaje)
+
+            ultimo_precio_compra = precio
+        elif motivo_compra:
+            enviar_telegram(f"{motivo_compra}\n🕒 {hora}")
+
+        time.sleep(intervalo_espera)
 
 if __name__ == "__main__":
     main()
