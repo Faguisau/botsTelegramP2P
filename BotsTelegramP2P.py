@@ -4,20 +4,24 @@ from datetime import datetime
 
 # --- Configuración Binance ---
 # Banco Pichincha (venta)
-umbral_1 = 0.991
-umbral_2 = 0.986
-umbral_3 = 0.982
+umbral_1 = 0.982
+umbral_2 = 0.978
+umbral_3 = 0.975
 metodo_pago_venta = "BancoPichincha"
 
 # Skrill (compra)
-umbral_skrill_1 = 1.020
-umbral_skrill_2 = 1.035
-umbral_skrill_3 = 1.045
+umbral_skrill_1 = 1.040
+umbral_skrill_2 = 1.048
+umbral_skrill_3 = 1.050
 metodo_pago_compra = "SkrillMoneybookers"
 
 moneda = "USD"
 cripto = "USDT"
+<<<<<<< HEAD
 intervalo_espera = 120  # 2 minutos
+=======
+intervalo_espera = 120  # 5 minutos
+>>>>>>> eb35ee67c8b87a06ac47da3c7d554a9e64bb73bf
 
 # --- Configuración Telegram ---
 bot_token = "7725174874:AAHdi1WSIDhgTY7zyCuspbWwqtwdyaW0HYQ"
