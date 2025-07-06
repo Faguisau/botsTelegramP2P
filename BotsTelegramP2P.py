@@ -12,6 +12,11 @@ umbral_venta = float(os.getenv("UMBRAL_VENTA", 0.982))
 umbral_venta_directa = float(os.getenv("UMBRAL_VENTA_DIRECTA", 0.985))
 umbral_compra_skrill = float(os.getenv("UMBRAL_COMPRA_SKRILL", 1.040))
 
+print("🔧 Umbrales desde entorno:")
+print("UMBRAL_VENTA =", umbral_venta)
+print("UMBRAL_VENTA_DIRECTA =", umbral_venta_directa)
+print("UMBRAL_COMPRA_SKRILL =", umbral_compra_skrill)
+
 moneda = "USD"
 cripto = "USDT"
 intervalo_espera = 120  # 2 minutos
@@ -26,6 +31,8 @@ log_file = "registro_alertas.txt"
 def loggear(texto):
     with open(log_file, "a", encoding="utf-8") as f:
         f.write(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} - {texto}\n")
+
+loggear(f"Valores cargados: UMBRAL_VENTA={umbral_venta}, UMBRAL_VENTA_DIRECTA={umbral_venta_directa}, UMBRAL_COMPRA_SKRILL={umbral_compra_skrill}")
 
 def enviar_telegram(mensaje):
     url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
@@ -122,7 +129,7 @@ def main():
             loggear(f"Compra {metodo_pago_compra}: {precio:.3f} USD ({tendencia}) por {comerciante} ({volumen} USDT)")
 
             if precio != ultimo_precio_compra and precio >= umbral_compra_skrill:
-                mensaje = f"🟢 Alerta Compra - {metodo_pago_compra}: {precio:.3f} USD\n{tendencia}\n👤 {comerciante}\n📦 {volumen} USDT\n🕒 {hora}"
+                mensaje = f"🟢 Alerta Compra PUBLICANDO  - {metodo_pago_compra}: {precio:.3f} USD\n{tendencia}\n👤 {comerciante}\n📦 {volumen} USDT\n🕒 {hora}"
                 enviar_telegram(mensaje)
 
             ultimo_precio_compra = precio
