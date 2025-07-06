@@ -32,6 +32,10 @@ def obtener_precio(moneda, metodo_pago, transaccion):
 
 def main():
     # Leer variables de entorno
+    print("🔍 DEBUG ENV VARS:")
+    for var in ["TOKEN", "CHAT_ID", "UMBRAL_COMPRA_SKRILL", "UMBRAL_VENTA", "UMBRAL_VENTA_DIRECTA"]:
+        print(f"{var} => {os.environ.get(var, 'NO DEFINIDA')}")
+
     token = os.environ["TOKEN"]
     chat_id = os.environ["CHAT_ID"]
 
