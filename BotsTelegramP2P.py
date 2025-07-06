@@ -4,7 +4,7 @@ from datetime import datetime
 
 # --- Configuración Binance ---
 # Banco Pichincha (venta)
-umbral_1 = 0.900
+umbral_1 = 0.990
 umbral_2 = 0.986
 umbral_3 = 0.982
 metodo_pago_venta = "BancoPichincha"
