@@ -53,3 +53,12 @@
 2025-07-06 12:47:09 - Venta DIRECTA BancoPichincha: 0.993 USD (🔼 Subió) por WinniCrytoCom (18065.88 USDT)
 2025-07-06 12:47:10 - Compra SkrillMoneybookers: 1.037 USD (📌 Primer dato) por Accepted_thirdparty (392.75 USDT)
 2025-07-06 12:47:11 - Mensaje enviado: 🟢 Alerta Compra PUBLICANDO - SkrillMoneybookers: 1.037 USD | 📌 Primer dato | 👤 Accepted_thirdparty | 📦 392.75 USDT | 🕒 2025-07-06 12:47:04
+2025-07-06 12:56:25 - Venta BancoPichincha: 0.984 USD (📌 Primer dato) por Btcass (695.88 USDT)
+2025-07-06 12:56:28 - Mensaje enviado: 🔻 Alerta Venta - BancoPichincha: 0.984 USD | 📌 Primer dato | 👤 Btcass | 📦 695.88 USDT | 🕒 2025-07-06 12:56:24
+2025-07-06 12:56:29 - Venta DIRECTA BancoPichincha: 0.993 USD (🔼 Subió) por WinniCrytoCom (18065.88 USDT)
+2025-07-06 12:56:30 - Compra SkrillMoneybookers: 1.036 USD (📌 Primer dato) por CRYPTO_CAMBIO21 (398.60 USDT)
+2025-07-06 12:56:31 - Mensaje enviado: 🟢 Alerta Compra - SkrillMoneybookers: 1.036 USD | 📌 Primer dato | 👤 CRYPTO_CAMBIO21 | 📦 398.60 USDT | 🕒 2025-07-06 12:56:24
+2025-07-06 12:57:53 - Venta BancoPichincha: 0.984 USD (📌 Primer dato) por Btcass (695.88 USDT)
+2025-07-06 12:57:54 - Venta DIRECTA BancoPichincha: 0.993 USD (🔼 Subió) por WinniCrytoCom (17058.85 USDT)
+2025-07-06 12:57:55 - Compra SkrillMoneybookers: 1.036 USD (📌 Primer dato) por CRYPTO_CAMBIO21 (371.48 USDT)
+2025-07-06 12:57:57 - Mensaje enviado: 🟢 Alerta Compra PUBLICANDO - SkrillMoneybookers: 1.036 USD | 📌 Primer dato | 👤 CRYPTO_CAMBIO21 | 📦 371.48 USDT | 🕒 2025-07-06 12:57:52
